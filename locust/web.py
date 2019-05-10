@@ -126,9 +126,13 @@ def request_stats():
 
     if stats:
         report["total_rps"] = stats[len(stats)-1]["current_rps"]
+        report["total_average_response_time"] = stats[len(stats)-1]["avg_response_time"]
         report["fail_ratio"] = runners.locust_runner.stats.total.fail_ratio
         report["current_response_time_percentile_95"] = runners.locust_runner.stats.total.get_current_response_time_percentile(0.95)
         report["current_response_time_percentile_50"] = runners.locust_runner.stats.total.get_current_response_time_percentile(0.5)
+        report["current_response_time_average"] = runners.locust_runner.stats.total.get_current_response_time_average()
+        report["current_max_response_time"] = runners.locust_runner.stats.total.get_current_response_time_max()
+        report["current_min_response_time"] = runners.locust_runner.stats.total.get_current_response_time_min()
     
     is_distributed = isinstance(runners.locust_runner, MasterLocustRunner)
     if is_distributed:

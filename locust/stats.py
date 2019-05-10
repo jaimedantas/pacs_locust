@@ -53,6 +53,81 @@ def calculate_response_time_percentile(response_times, num_requests, percent):
         if(num_requests - processed_count <= num_of_request):
             return response_time
 
+def calculate_response_time_average(response_times, num_requests):
+    """
+    Get the response time that a certain number of percent of the requests
+    finished within. Arguments:
+    
+    response_times: A StatsEntry.response_times dict
+    num_requests: Number of request made (could be derived from response_times, 
+                  but we save some CPU cycles by using the value which we already store)
+    percent: The percentile we want to calculate. Specified in range: 0.0 - 1.0
+    """
+    num_of_request = int(num_requests)
+
+    sum_val = 0
+    processed_count = 0
+    for response_time in sorted(six.iterkeys(response_times), reverse=True):
+        processed_count += response_times[response_time]
+        sum_val += response_time
+            
+    if num_of_request > 0:
+        return int(sum_val / float(num_of_request))
+    else:
+        return 0
+
+def calculate_response_time_max(response_times, num_requests):
+    """
+    Get the response time that a certain number of percent of the requests
+    finished within. Arguments:
+    
+    response_times: A StatsEntry.response_times dict
+    num_requests: Number of request made (could be derived from response_times, 
+                  but we save some CPU cycles by using the value which we already store)
+    percent: The percentile we want to calculate. Specified in range: 0.0 - 1.0
+    """
+    num_of_request = int(num_requests)
+
+    max_val = 0
+    processed_count = 0
+    for response_time in sorted(six.iterkeys(response_times), reverse=True):
+        processed_count += response_times[response_time]
+        if response_time > max_val:
+            max_val = response_time
+
+    if max_val is None:
+        return None
+
+    return int(max_val)
+
+def calculate_response_time_min(response_times, num_requests):
+    """
+    Get the response time that a certain number of percent of the requests
+    finished within. Arguments:
+    
+    response_times: A StatsEntry.response_times dict
+    num_requests: Number of request made (could be derived from response_times, 
+                  but we save some CPU cycles by using the value which we already store)
+    percent: The percentile we want to calculate. Specified in range: 0.0 - 1.0
+    """
+    num_of_request = int(num_requests)
+
+    min_val = None
+    processed_count = 0
+    for response_time in sorted(six.iterkeys(response_times), reverse=True):
+        processed_count += response_times[response_time]
+
+        if min_val is None:
+            min_val = response_time
+        elif response_time < min_val:
+            min_val = response_time
+            
+    if min_val is None:
+        return None
+
+    return int(min_val)
+
+
 
 def diff_response_time_dicts(latest, old):
     """
@@ -408,6 +483,117 @@ class StatsEntry(object):
         Percent specified in range: 0.0 - 1.0
         """
         return calculate_response_time_percentile(self.response_times, self.num_requests, percent)
+
+    def get_current_response_time_average(self):
+        """
+        Calculate the *current* response time for a certain percentile. We use a sliding 
+        window of (approximately) the last 10 seconds (specified by CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW) 
+        when calculating this.
+        """
+        if not self.use_response_times_cache:
+            raise ValueError("StatsEntry.use_response_times_cache must be set to True if we should be able to calculate the _current_ response time percentile")
+        # First, we want to determine which of the cached response_times dicts we should 
+        # use to get response_times for approximately 10 seconds ago. 
+        t = int(time.time())
+        # Since we can't be sure that the cache contains an entry for every second. 
+        # We'll construct a list of timestamps which we consider acceptable keys to be used 
+        # when trying to fetch the cached response_times. We construct this list in such a way 
+        # that it's ordered by preference by starting to add t-10, then t-11, t-9, t-12, t-8, 
+        # and so on
+        acceptable_timestamps = []
+        for i in xrange(9):
+            acceptable_timestamps.append(t-CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW-i)
+            acceptable_timestamps.append(t-CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW+i)
+        
+        cached = None
+        for ts in acceptable_timestamps:
+            if ts in self.response_times_cache:
+                cached = self.response_times_cache[ts]
+                break
+        
+        if cached:
+            # If we fond an acceptable cached response times, we'll calculate a new response 
+            # times dict of the last 10 seconds (approximately) by diffing it with the current 
+            # total response times. Then we'll use that to calculate a response time percentile 
+            # for that timeframe
+            return calculate_response_time_average(
+                diff_response_time_dicts(self.response_times, cached.response_times), 
+                self.num_requests - cached.num_requests, 
+            )
+
+    def get_current_response_time_max(self):
+        """
+        Calculate the *current* response time for a certain percentile. We use a sliding 
+        window of (approximately) the last 10 seconds (specified by CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW) 
+        when calculating this.
+        """
+        if not self.use_response_times_cache:
+            raise ValueError("StatsEntry.use_response_times_cache must be set to True if we should be able to calculate the _current_ response time percentile")
+        # First, we want to determine which of the cached response_times dicts we should 
+        # use to get response_times for approximately 10 seconds ago. 
+        t = int(time.time())
+        # Since we can't be sure that the cache contains an entry for every second. 
+        # We'll construct a list of timestamps which we consider acceptable keys to be used 
+        # when trying to fetch the cached response_times. We construct this list in such a way 
+        # that it's ordered by preference by starting to add t-10, then t-11, t-9, t-12, t-8, 
+        # and so on
+        acceptable_timestamps = []
+        for i in xrange(9):
+            acceptable_timestamps.append(t-CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW-i)
+            acceptable_timestamps.append(t-CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW+i)
+        
+        cached = None
+        for ts in acceptable_timestamps:
+            if ts in self.response_times_cache:
+                cached = self.response_times_cache[ts]
+                break
+        
+        if cached:
+            # If we fond an acceptable cached response times, we'll calculate a new response 
+            # times dict of the last 10 seconds (approximately) by diffing it with the current 
+            # total response times. Then we'll use that to calculate a response time percentile 
+            # for that timeframe
+            return calculate_response_time_max(
+                diff_response_time_dicts(self.response_times, cached.response_times), 
+                self.num_requests - cached.num_requests, 
+            )
+
+    def get_current_response_time_min(self):
+        """
+        Calculate the *current* response time for a certain percentile. We use a sliding 
+        window of (approximately) the last 10 seconds (specified by CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW) 
+        when calculating this.
+        """
+        if not self.use_response_times_cache:
+            raise ValueError("StatsEntry.use_response_times_cache must be set to True if we should be able to calculate the _current_ response time percentile")
+        # First, we want to determine which of the cached response_times dicts we should 
+        # use to get response_times for approximately 10 seconds ago. 
+        t = int(time.time())
+        # Since we can't be sure that the cache contains an entry for every second. 
+        # We'll construct a list of timestamps which we consider acceptable keys to be used 
+        # when trying to fetch the cached response_times. We construct this list in such a way 
+        # that it's ordered by preference by starting to add t-10, then t-11, t-9, t-12, t-8, 
+        # and so on
+        acceptable_timestamps = []
+        for i in xrange(9):
+            acceptable_timestamps.append(t-CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW-i)
+            acceptable_timestamps.append(t-CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW+i)
+        
+        cached = None
+        for ts in acceptable_timestamps:
+            if ts in self.response_times_cache:
+                cached = self.response_times_cache[ts]
+                break
+        
+        if cached:
+            # If we fond an acceptable cached response times, we'll calculate a new response 
+            # times dict of the last 10 seconds (approximately) by diffing it with the current 
+            # total response times. Then we'll use that to calculate a response time percentile 
+            # for that timeframe
+            return calculate_response_time_min(
+                diff_response_time_dicts(self.response_times, cached.response_times), 
+                self.num_requests - cached.num_requests, 
+            )
     
     def get_current_response_time_percentile(self, percent):
         """
