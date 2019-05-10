@@ -3,6 +3,7 @@
 - Run the command `ddsl_locust` instead of `locust`.
 - Added `current_response_time_average`, `current_max_response_time`, and `current_min_response_time`.
 - Installation: `pip install ddsl_locustio`.
+- Added average response time to the live plots.
 
 # Locust
 
