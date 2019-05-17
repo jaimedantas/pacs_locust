@@ -71,6 +71,7 @@ def calculate_response_time_average(response_times, num_requests):
         processed_count += response_times[response_time]
         sum_val += response_time * response_times[response_time]
             
+    num_of_request = processed_count
     if num_of_request > 0:
         return int(sum_val / float(num_of_request))
     else:
