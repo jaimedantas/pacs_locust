@@ -16,7 +16,7 @@ matrix:
     - python: 2.7
       env: TOXENV=py27
     - stage: Verify Docker image builds
-      script: docker build -t locustio/locust .
+      script: docker build -t nimamahmoudi/ddsl_locust .
 addons:
   apt:
     packages:
