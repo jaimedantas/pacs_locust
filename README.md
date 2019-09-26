@@ -8,7 +8,7 @@
 
 # Locust
 
-[![Build Status](https://img.shields.io/travis/nimamahmoudi/ddsl_locust.svg)](https://travis-ci.org/nimamahmoudi/ddsl_locust)
+[![Build Status](https://img.shields.io/travis/nimamahmoudi/ddsl_locust.svg)](https://travis-ci.com/nimamahmoudi/ddsl_locust)
 [![codecov](https://codecov.io/gh/nimamahmoudi/ddsl_locust/branch/master/graph/badge.svg)](https://codecov.io/gh/nimamahmoudi/ddsl_locust)
 [![license](https://img.shields.io/github/license/nimamahmoudi/ddsl_locust.svg)](https://github.com/nimamahmoudi/ddsl_locust/blob/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/ddsl-locustio.svg)](https://pypi.org/project/ddsl-locustio/)
