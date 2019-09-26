@@ -1,5 +1,7 @@
 language: python
 cache: pip
+services:
+  - docker
 matrix:
   include:
     - python: 3.7
@@ -12,7 +14,12 @@ matrix:
     - python: 2.7
       env: TOXENV=py27
     - stage: Verify Docker image builds
-      script: docker build -t nimamahmoudi/ddsl_locust .
+      script: 
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t nimamahmoudi/ddsl_locust .
+        # For now, only push to dev tag
+        - docker tag nimamahmoudi/ddsl_locust nimamahmoudi/ddsl_locust:dev
+        - docker push nimamahmoudi/ddsl_locust:dev
 addons:
   apt:
     packages:
