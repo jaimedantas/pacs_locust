@@ -187,13 +187,22 @@ class HttpLocust(Locust):
     Instance of HttpSession that is created upon instantiation of Locust. 
     The client support cookies, and therefore keeps the session between HTTP requests.
     """
+
+    trust_env = False
+    """
+    Look for proxy settings will slow down the default http client.
+    It's the default behavior of the requests library.
+    We don't need this feature most of the time, so disable it by default.
+    """
     
     def __init__(self):
         super(HttpLocust, self).__init__()
         if self.host is None:
             raise LocustError("You must specify the base host. Either in the host attribute in the Locust class, or on the command line using the --host option.")
-        
-        self.client = HttpSession(base_url=self.host)
+
+        session = HttpSession(base_url=self.host)
+        session.trust_env = self.trust_env
+        self.client = session
 
 
 class TaskSetMeta(type):
@@ -460,7 +469,7 @@ class TaskSequence(TaskSet):
     *max_wait* milliseconds. It will then schedule the `index + 1 % len(tasks)` task for execution and so on.
 
     TaskSequence can be nested with TaskSet, which means that a TaskSequence's *tasks* attribute can contain
-    TaskSet instances as well as other TaskSequence instances. If the nested TaskSet it scheduled to be executed, it will be
+    TaskSet instances as well as other TaskSequence instances. If the nested TaskSet is scheduled to be executed, it will be
     instantiated and called from the current executing TaskSet. Execution in the
     currently running TaskSet will then be handed over to the nested TaskSet which will
     continue to run until it throws an InterruptTaskSet exception, which is done when

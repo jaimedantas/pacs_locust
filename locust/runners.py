@@ -97,18 +97,18 @@ class LocustRunner(object):
             self.num_clients += spawn_count
 
         logger.info("Hatching and swarming %i clients at the rate %g clients/s..." % (spawn_count, self.hatch_rate))
-        occurence_count = dict([(l.__name__, 0) for l in self.locust_classes])
+        occurrence_count = dict([(l.__name__, 0) for l in self.locust_classes])
         
         def hatch():
             sleep_time = 1.0 / self.hatch_rate
             while True:
                 if not bucket:
-                    logger.info("All locusts hatched: %s" % ", ".join(["%s: %d" % (name, count) for name, count in six.iteritems(occurence_count)]))
+                    logger.info("All locusts hatched: %s" % ", ".join(["%s: %d" % (name, count) for name, count in six.iteritems(occurrence_count)]))
                     events.hatch_complete.fire(user_count=self.num_clients)
                     return
 
                 locust = bucket.pop(random.randint(0, len(bucket)-1))
-                occurence_count[locust.__name__] += 1
+                occurrence_count[locust.__name__] += 1
                 def start_locust(_):
                     try:
                         locust().run(runner=self)
@@ -321,6 +321,7 @@ class MasterLocustRunner(DistributedLocustRunner):
     def quit(self):
         for client in self.clients.all:
             self.server.send_to_client(Message("quit", None, client.id))
+        gevent.sleep(0.5) # wait for final stats report from all slaves
         self.greenlet.kill(block=True)
     
     def heartbeat_worker(self):
@@ -439,16 +440,20 @@ class SlaveLocustRunner(DistributedLocustRunner):
             elif msg.type == "quit":
                 logger.info("Got quit message from master, shutting down...")
                 self.stop()
+                self._send_stats() # send a final report, in case there were any samples not yet reported
                 self.greenlet.kill(block=True)
 
     def stats_reporter(self):
         while True:
-            data = {}
-            events.report_to_master.fire(client_id=self.client_id, data=data)
             try:
-                self.client.send(Message("stats", data, self.client_id))
+                self._send_stats()
             except:
                 logger.error("Connection lost to master server. Aborting...")
                 break
             
             gevent.sleep(SLAVE_REPORT_INTERVAL)
+
+    def _send_stats(self):
+        data = {}
+        events.report_to_master.fire(client_id=self.client_id, data=data)
+        self.client.send(Message("stats", data, self.client_id))
