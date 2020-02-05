@@ -16,10 +16,10 @@ matrix:
     - stage: Verify Docker image builds
       script: 
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker build -t nimamahmoudi/ddsl_locust .
+        - docker build -t nimamahmoudi/pacs_locust .
         # For now, only push to dev tag
-        - docker tag nimamahmoudi/ddsl_locust nimamahmoudi/ddsl_locust:dev
-        - docker push nimamahmoudi/ddsl_locust:dev
+        - docker tag nimamahmoudi/pacs_locust nimamahmoudi/pacs_locust:dev
+        - docker push nimamahmoudi/pacs_locust:dev
 addons:
   apt:
     packages:

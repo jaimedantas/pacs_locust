@@ -14,10 +14,10 @@ with open(_init_file, 'rb') as f:
         f.read().decode('utf-8')).group(1)))
 
 setup(
-    name='ddsl_locustio',
+    name='pacs_locustio',
     version=version,
     description="Website load testing framework",
-    long_description="""DDSL Locust is a python utility for doing easy, distributed load testing of a web site""",
+    long_description="""pacs Locust is a python utility for doing easy, distributed load testing of a web site""",
     classifiers=[
         "Topic :: Software Development :: Testing :: Traffic Generation",
         "Development Status :: 4 - Beta",
@@ -36,7 +36,7 @@ setup(
     keywords='',
     author='Jonatan Heyman, Carl Bystrom, Joakim Hamrén, Hugo Heyman',
     author_email='',
-    url='https://github.com/nimamahmoudi/ddsl_locust',
+    url='https://github.com/nimamahmoudi/pacs_locust',
     license='MIT',
     packages=find_packages(exclude=['examples', 'tests']),
     include_package_data=True,
@@ -46,7 +46,7 @@ setup(
     tests_require=['mock'],
     entry_points={
         'console_scripts': [
-            'ddsl_locust = locust.main:main',
+            'pacs_locust = locust.main:main',
         ]
     },
 )
