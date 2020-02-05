@@ -1,19 +1,19 @@
 # Changes from the Original Locust
 
-- Run the command `ddsl_locust` instead of `locust`.
+- Run the command `pacs_locust` instead of `locust`.
 - Added `current_response_time_average`, `current_max_response_time`, and `current_min_response_time`.
-- Installation: `pip install ddsl_locustio`.
+- Installation: `pip install pacs_locustio`.
 - Added average response time to the live plots.
-- Docker Address: `nimamahmoudi/ddsl_locust`
+- Docker Address: `nimamahmoudi/pacs_locust`
 
 # Locust
 
-[![Build Status](https://img.shields.io/travis/nimamahmoudi/ddsl_locust.svg)](https://travis-ci.com/nimamahmoudi/ddsl_locust)
-[![codecov](https://codecov.io/gh/nimamahmoudi/ddsl_locust/branch/master/graph/badge.svg)](https://codecov.io/gh/nimamahmoudi/ddsl_locust)
-[![license](https://img.shields.io/github/license/nimamahmoudi/ddsl_locust.svg)](https://github.com/nimamahmoudi/ddsl_locust/blob/master/LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/ddsl-locustio.svg)](https://pypi.org/project/ddsl-locustio/)
-[![PyPI](https://img.shields.io/pypi/pyversions/ddsl-locustio.svg)](https://pypi.org/project/ddsl-locustio/)
-[![GitHub contributors](https://img.shields.io/github/contributors/nimamahmoudi/ddsl_locust.svg)](https://github.com/nimamahmoudi/ddsl_locust/graphs/contributors)
+[![Build Status](https://img.shields.io/travis/nimamahmoudi/pacs_locust.svg)](https://travis-ci.com/nimamahmoudi/pacs_locust)
+[![codecov](https://codecov.io/gh/nimamahmoudi/pacs_locust/branch/master/graph/badge.svg)](https://codecov.io/gh/nimamahmoudi/pacs_locust)
+[![license](https://img.shields.io/github/license/nimamahmoudi/pacs_locust.svg)](https://github.com/nimamahmoudi/pacs_locust/blob/master/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/pacs-locustio.svg)](https://pypi.org/project/pacs-locustio/)
+[![PyPI](https://img.shields.io/pypi/pyversions/pacs-locustio.svg)](https://pypi.org/project/pacs-locustio/)
+[![GitHub contributors](https://img.shields.io/github/contributors/nimamahmoudi/pacs_locust.svg)](https://github.com/nimamahmoudi/pacs_locust/graphs/contributors)
 
 ## Links
 

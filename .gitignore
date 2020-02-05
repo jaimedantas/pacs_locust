@@ -1,7 +1,7 @@
 *.pyc
 locust.wpr
-ddsl_locust.egg-info/**
-ddsl_locustio.egg-info/**
+pacs_locust.egg-info/**
+pacs_locustio.egg-info/**
 docs/_build/**
 mock.*.egg
 dist/**
