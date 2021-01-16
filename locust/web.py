@@ -271,7 +271,7 @@ class WebUI:
 
             if stats:
                 report["total_rps"] = stats[len(stats) - 1]["current_rps"]
-                report["total_average_response_time"] = stats[len(stats)-1]["avg_response_time"]
+                report["total_average_response_time"] = stats[len(stats) - 1]["avg_response_time"]
                 report["fail_ratio"] = environment.runner.stats.total.fail_ratio
                 report[
                     "current_response_time_percentile_95"
