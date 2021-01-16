@@ -19,3 +19,4 @@ docs/env-options.rst
 __pycache__
 .pytest_cache
 .sass-cache/
+.vscode
