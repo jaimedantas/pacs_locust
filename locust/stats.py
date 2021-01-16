@@ -90,7 +90,7 @@ def calculate_response_time_average(response_times, num_requests):
 
     sum_val = 0
     processed_count = 0
-    for response_time in sorted(six.iterkeys(response_times), reverse=True):
+    for response_time in sorted(response_times.keys(), reverse=True):
         processed_count += response_times[response_time]
         sum_val += response_time * response_times[response_time]
             
@@ -114,7 +114,7 @@ def calculate_response_time_max(response_times, num_requests):
 
     max_val = 0
     processed_count = 0
-    for response_time in sorted(six.iterkeys(response_times), reverse=True):
+    for response_time in sorted(response_times.keys(), reverse=True):
         processed_count += response_times[response_time]
         if response_time > max_val:
             max_val = response_time
@@ -138,7 +138,7 @@ def calculate_response_time_min(response_times, num_requests):
 
     min_val = None
     processed_count = 0
-    for response_time in sorted(six.iterkeys(response_times), reverse=True):
+    for response_time in sorted(response_times.keys(), reverse=True):
         processed_count += response_times[response_time]
 
         if min_val is None:

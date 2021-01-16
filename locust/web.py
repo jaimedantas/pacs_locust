@@ -279,9 +279,9 @@ class WebUI:
                 report[
                     "current_response_time_percentile_50"
                 ] = environment.runner.stats.total.get_current_response_time_percentile(0.5)
-                report["current_response_time_average"] = runners.locust_runner.stats.total.get_current_response_time_average()
-                report["current_max_response_time"] = runners.locust_runner.stats.total.get_current_response_time_max()
-                report["current_min_response_time"] = runners.locust_runner.stats.total.get_current_response_time_min()
+                report["current_response_time_average"] = environment.runner.stats.total.get_current_response_time_average()
+                report["current_max_response_time"] = environment.runner.stats.total.get_current_response_time_max()
+                report["current_min_response_time"] = environment.runner.stats.total.get_current_response_time_min()
 
             is_distributed = isinstance(environment.runner, MasterRunner)
             if is_distributed:
