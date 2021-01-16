@@ -3,46 +3,55 @@ API
 ###
 
 
-Locust class
+User class
 ============
 
-.. autoclass:: locust.core.Locust
-	:members: min_wait, max_wait, wait_function, task_set, weight
+.. autoclass:: locust.User
+    :members: wait_time, tasks, weight, abstract, on_start, on_stop, wait
 
-HttpLocust class
+HttpUser class
 ================
 
-.. autoclass:: locust.core.HttpLocust
-	:members: min_wait, max_wait, wait_function, task_set, client
+.. autoclass:: locust.HttpUser
+    :members: wait_time, tasks, client, abstract
 
 
 TaskSet class
 =============
 
-.. autoclass:: locust.core.TaskSet
-	:members: locust, parent, min_wait, max_wait, wait_function, client, tasks, interrupt, schedule_task
+.. autoclass:: locust.TaskSet
+    :members: user, parent, wait_time, client, tasks, interrupt, schedule_task, on_start, on_stop, wait
 
 task decorator
 ==============
 
-.. autofunction:: locust.core.task
+.. autofunction:: locust.task
 
-TaskSequence class
-==================
+tag decorator
+==============
 
-.. autoclass:: locust.core.TaskSequence
-	:members: locust, parent, min_wait, max_wait, wait_function, client, tasks, interrupt, schedule_task
+.. autofunction:: locust.tag
 
-seq_task decorator
-==================
+SequentialTaskSet class
+=======================
 
-.. autofunction:: locust.core.seq_task
+.. autoclass:: locust.SequentialTaskSet
+    :members: user, parent, wait_time, client, tasks, interrupt, schedule_task, on_start, on_stop
+
+
+.. _wait_time_functions:
+
+Built in wait_time functions
+============================
+
+.. automodule:: locust.wait_time
+    :members: between, constant, constant_pacing
 
 HttpSession class
 =================
 
 .. autoclass:: locust.clients.HttpSession
-	:members: __init__, request, get, post, delete, put, head, options, patch
+    :members: __init__, request, get, post, delete, put, head, options, patch
 
 Response class
 ==============
@@ -54,19 +63,34 @@ for locust since it's so central when writing locust load tests. You can also lo
 `requests documentation <http://python-requests.org>`_.
 
 .. autoclass:: requests.Response
-	:inherited-members:
-	:noindex:
+    :inherited-members:
+    :noindex:
 
 ResponseContextManager class
 ============================
 
 .. autoclass:: locust.clients.ResponseContextManager
-	:members: success, failure
+    :members: success, failure
 
 
-InterruptTaskSet Exception
-==========================
+.. _exceptions:
+
+Exceptions
+==========
+
 .. autoexception:: locust.exception.InterruptTaskSet
+
+
+.. autoexception:: locust.exception.RescheduleTask
+
+
+.. autoexception:: locust.exception.RescheduleTaskImmediately
+
+
+Environment class
+=================
+.. autoclass:: locust.env.Environment
+    :members:
 
 
 .. _events:
@@ -74,15 +98,44 @@ InterruptTaskSet Exception
 Event hooks
 ===========
 
-The event hooks are instances of the **locust.events.EventHook** class:
+Locust provides event hooks that can be used to extend Locust in various ways.
 
-.. autoclass:: locust.events.EventHook
+The following event hooks are available under :py:attr:`Environment.events <locust.env.Environment.events>`, 
+and there's also a reference to these events under ``locust.events`` that can be used at the module level 
+of locust scripts (since the Environment instance hasn't been created when the locustfile is imported).
 
-Available hooks
+.. autoclass:: locust.event.Events
+    :members:
+
+
+EventHook class
 ---------------
 
-The following event hooks are available under the **locust.events** module:
+The event hooks are instances of the **locust.events.EventHook** class:
 
-.. automodule:: locust.events
-	:members: request_success, request_failure, locust_error, report_to_master, slave_report, hatch_complete, quitting
+.. autoclass:: locust.event.EventHook
 
+.. note::
+
+    It's highly recommended that you add a wildcard keyword argument in your event listeners
+    to prevent your code from breaking if new arguments are added in a future version.
+
+
+Runner classes
+=====================
+
+.. autoclass:: locust.runners.Runner
+    :members: start, stop, quit, user_count
+
+.. autoclass:: locust.runners.LocalRunner
+
+.. autoclass:: locust.runners.MasterRunner
+
+.. autoclass:: locust.runners.WorkerRunner
+
+
+Web UI class
+============
+
+.. autoclass:: locust.web.WebUI
+    :members:
