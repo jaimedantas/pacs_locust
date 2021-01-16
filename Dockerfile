@@ -1,16 +1,14 @@
-FROM python:3.6.6-alpine3.8 as builder
+FROM python:3.8
 
-RUN apk --no-cache add g++ zeromq-dev
-RUN pip install pacs-locustio pyzmq
+COPY . /build
+RUN cd /build && pip install . && rm -rf /build
 
-FROM python:3.6.6-alpine3.8
+EXPOSE 8089 5557
 
-RUN apk --no-cache add zeromq-dev
-COPY --from=builder /usr/local/lib/python3.6/site-packages /usr/local/lib/python3.6/site-packages
-COPY --from=builder /usr/local/bin/pacs_locust /usr/local/bin/pacs_locust
-COPY docker_start.sh docker_start.sh
-RUN chmod +x docker_start.sh
+RUN useradd --create-home locust
+USER locust
+WORKDIR /home/locust
+ENTRYPOINT ["pacs_locust"]
 
-EXPOSE 8089 5557 5558
-
-ENTRYPOINT ["./docker_start.sh"]
+# turn off python output buffering
+ENV PYTHONUNBUFFERED=1

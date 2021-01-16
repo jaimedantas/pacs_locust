@@ -4,17 +4,16 @@ services:
   - docker
 matrix:
   include:
+    - python: 3.9
+      env: TOXENV=py39
+    - python: 3.8
+      env: TOXENV=py38
     - python: 3.7
       env: TOXENV=py37
-      dist: xenial
     - python: 3.6
       env: TOXENV=py36
-    - python: 3.5
-      env: TOXENV=py35
-    - python: 2.7
-      env: TOXENV=py27
     - stage: Verify Docker image builds
-      script: 
+      script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker build -t nimamahmoudi/pacs_locust .
         # For now, only push to dev tag
@@ -37,4 +36,3 @@ deploy:
   skip_existing: true
   password:
     secure: 21U8f6wCS+tAv0zhgK2PVcWlxPMxaPKJ9dBcQSlQCw7L60ONbUjS19o+ui7ygx0ld/Bexxjk2IMMW6SA67ShnzQ5AfbYH4qYy3lif25raxNiPbGCy2Uvh9uivZgwT7BPm5DXYSboepVbT7U/lvf9JJ+Q/7g/kG+QokOffINP2IuZd4si0tBPMvj7LJm9+PHN0HklgdzAkv1uM2rTvAR3ls9JqWwDn8KWfVkWx1F/Lft87nREuqW9O9sRptAAZixEalSwWVY16UJPNXDct8h1dyrzbVEzo0tg7yLYmAGse5mf0qpypoDIaGB7ZDL+whzjbV/ESrFVE/6hDZ6jPcd4BeBfkwzYfoEo458P2AmfUKY9DwMwIKm+BRJbv6C/8YMgz4E91e+R4PgeYh6eOPsCETR9kH6u6qB9ZeS6L9sA47mgW1+cGjJxIkSN1bpx0sQoKxg1LUAlLXXpbQZWMiGhVXtWd4tk2jItKcWE89zV+wFCc0R29TDf37DL2xyh6ty3ATanrugVA9wK33OY/VxzQ/eCRksdQA0D1tlT/pckpLazI/kpvlhAy8xT0i225PO/2jl7LUVHWIlbBOhdYHpxDuyY5Ua+pbGGKzgJ27Ib7UP0tghOdtBXW8K1SR4KFaoZyJWfn937MnE2qEfNDf9KfVsR64BG5z0oWjlhEm85tJE=
-
