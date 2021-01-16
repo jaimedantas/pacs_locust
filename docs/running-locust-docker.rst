@@ -4,40 +4,41 @@
 Running Locust with Docker
 =================================
 
-To keep things simple we provide a single Docker image that can run standalone, as a master, or as a slave. 
+The official Docker image is currently found at `locustio/locust <https://hub.docker.com/r/locustio/locust>`_.
+
+The docker image can be used like this (assuming that the ``locustfile.py`` exists in the current working directory)::
+
+    docker run -p 8089:8089 -v $PWD:/mnt/locust locustio/locust -f /mnt/locust/locustfile.py
 
 
-Environment Variables
----------------------------------------------
+Docker Compose
+==============
 
-- ``LOCUST_MODE``
+Here's an example Docker Compose file that could be used to start both a master node, and worker nodes:
 
-One of 'standalone', 'master', or 'slave'. Defaults to 'standalone'.
+.. literalinclude:: ../examples/docker-compose/docker-compose.yml
+    :language: yaml
 
-- ``LOCUSTFILE_PATH``
+The above compose configuration could be used to start a master node and 4 workers using the following command::
 
-The path inside the container to the locustfile. Defaults to '/locustfile.py`
-
-- ``LOCUST_MASTER_HOST``
-
-The hostname of the master.
-
-- ``LOCUST_MASTER_PORT``
-
-The port used to communicate with the master. Defaults to 5557.
+    docker-compose up --scale worker=4
 
 
-Add your tests
----------------------------------------------
+Use docker image as a base image
+================================
 
-The easiest way to get your tests running is to build an image with your test file built in. Once you've 
-written your locustfile you can bake it into a Docker image with a simple ``Dockerfile``:
+It's very common to have test scripts that rely on third party python packages. In those cases you can use the
+official Locust docker image as a base image::
 
-```
-FROM locustio/locust
-ADD locustfile.py locustfile.py
-```
+    FROM locustio/locust
+    RUN pip3 install some-python-package
 
-You'll need to push the built image to a Docker repository such as Dockerhub, AWS ECR, or GCR in order for
-distributed infrastructure to be able to pull the image. See your chosen repository's documentation on how
-to authenticate with the repository to pull the image.
+
+Running a distributed load test on Kubernetes
+=============================================
+
+The easiest way to run Locust on Kubernetes is to use a Helm chart. A Helm chart will package all settings and kubernetes resources together into an easy to manage way.
+
+Currently the most up to date Helm chart is here: `github.com/deliveryhero/helm-charts <https://github.com/deliveryhero/helm-charts/tree/master/stable/locust>`_
+
+Note: this Helm chart is not maintained or supported directly by Locust maintainers.
