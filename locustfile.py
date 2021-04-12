@@ -25,9 +25,9 @@ class StagesShape(LoadTestShape):
             stop -- A boolean that can stop that test at a specific stage
         stop_at_end -- Can be set to stop once all stages have run.
     """
-    threshold = 180
+    threshold = 450
     before = 1
-    userIdle = 5
+    userIdle = 6
     totalTestTime = 9000
 
     def tick(self):
