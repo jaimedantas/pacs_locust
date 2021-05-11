@@ -41,7 +41,7 @@ class StagesShape(LoadTestShape):
             #print("run: "+str(run_time))
             return tick_data
         elif run_time < self.totalTestTime:
-            value = 0.056235828 + self.before
+            value = 0.051235828 + self.before
             self.before = value
             print("User: "+str(value))
             #print("run: "+str(run_time))
