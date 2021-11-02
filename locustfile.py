@@ -1,11 +1,19 @@
 from locust import HttpUser, TaskSet, task, constant
 from locust import LoadTestShape
-
+from skimage.io import imread_collection
+import base64
+import random
+import json
+from PIL import Image
+import glob
 
 class UserTasks(TaskSet):
     @task
     def get_root(self):
-        self.client.get("/")
+        json = {"fileContents": str(getImage())[2:]}
+        #data['fileContents'] = str(getImage())
+        #json_data = json.dumps(data)
+        self.client.post("/", data=None, json=json)
 
 
 class WebsiteUser(HttpUser):
@@ -47,3 +55,21 @@ class StagesShape(LoadTestShape):
             return tick_data
 
         return None
+
+
+def getImage():
+    data = []
+    col_dir = 'images_set/sample/*.jpg'
+    col = imread_collection(col_dir)
+
+    for filename in glob.glob(col_dir):
+        with open(filename, "rb") as img_file:
+            b64_string = base64.b64encode(img_file.read())
+        data.append(str(b64_string))
+
+    index = random.randint(0, len(data)-1)
+    return data[index]
+
+
+if __name__ == "__main__":
+    print(getImage())
