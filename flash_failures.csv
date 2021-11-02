@@ -1,2 +1,0 @@
-Method,Name,Error,Occurrences
-GET,/resource/123e4567-e89b-12d3-a456-426614174000/,502 Server Error: Bad Gateway for url: http://35.208.196.46:8080/resource/123e4567-e89b-12d3-a456-426614174000/,15
