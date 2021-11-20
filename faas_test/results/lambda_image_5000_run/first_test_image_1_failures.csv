@@ -1,0 +1,3 @@
+Method,Name,Error,Occurrences
+POST,/default/app_lambda_image/,502 Server Error: Bad Gateway for url: https://gydrsqutj5.execute-api.us-east-1.amazonaws.com/default/app_lambda_image/,1
+POST,/default/app_lambda_image/,"('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))",1

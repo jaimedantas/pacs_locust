@@ -3,8 +3,6 @@ from locust import LoadTestShape
 from skimage.io import imread_collection
 import base64
 import random
-import json
-from PIL import Image
 import glob
 
 class UserTasks(TaskSet):
@@ -35,8 +33,8 @@ class StagesShape(LoadTestShape):
     """
     threshold = 450
     before = 1
-    userIdle = 6
-    totalTestTime = 9000
+    userIdle = 2
+    totalTestTime = 10
 
     def tick(self):
         run_time = self.get_run_time()
