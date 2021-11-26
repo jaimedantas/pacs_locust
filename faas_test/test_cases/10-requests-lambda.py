@@ -13,7 +13,7 @@ class UserTasks(TaskSet):
 
 
 class WebsiteUser(HttpUser):
-    wait_time = constant(0.5)
+    wait_time = constant(600)
     tasks = [UserTasks]
 
 
@@ -29,7 +29,7 @@ class StagesShape(LoadTestShape):
             stop -- A boolean that can stop that test at a specific stage
         stop_at_end -- Can be set to stop once all stages have run.
     """
-    threshold = 14400
+    threshold = 14400000
     before = 1
     userIdle = 1
     totalTestTime = 1
